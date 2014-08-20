@@ -72,7 +72,7 @@ public class TextBolt : MonoBehaviour {
 	public GameObject MANAGERS; // object containing Font and Material manager components
 	// must be passed in initialization or through editor
 
-	public float MOVE_SPEED = 1f;
+	public float MOVE_SPEED = 4f;
 	public Vector3 MOVE_DIR = Vector3.down; //should have magnitude 1
 	
 	public double ALPHA_FADE = 0.01; // how much alpha decreases every frame
@@ -86,6 +86,9 @@ public class TextBolt : MonoBehaviour {
 	int cellcounter = 0;
 	
 	void Start () {
+		if (MANAGERS == null) {
+			Debug.LogWarning("[TextBolt] MANAGERS not given, things will break!");
+		}
 		original_pos = transform.position;
 	}
 
