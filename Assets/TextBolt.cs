@@ -9,30 +9,25 @@ public class TextBolt : MonoBehaviour {
 		public GameObject text_mesh;
 		public MeshRenderer mr;
 
-		public TextCell( Vector3 pos, int size, int font_res, float scale, Color color,
+		public TextCell( Vector3 pos, int size, Color color,
 		                string text, Font font, Material mat){
 			text_mesh = new GameObject("Text Cell");
 			text_mesh.transform.position = pos;
 			TextMesh mesh_component = (TextMesh)(text_mesh.AddComponent<TextMesh>());
 
-			mesh_component.fontSize 	 = font_res;
+			mesh_component.fontSize 	 = size;
 			mesh_component.characterSize = size;
 			mesh_component.color 		 = color;
 			mesh_component.text 		 = text;
 
 			mesh_component.font 		 = font;
 
-
 			mr = text_mesh.transform.GetComponent<MeshRenderer>();
 			mr.material = mat;
 
-			/*if (mr.material == null){
-				print("NONONONOull");
-			}*/
-
-			text_mesh.transform.localScale = text_mesh.transform.localScale * scale;
+			//text_mesh.transform.localScale = text_mesh.transform.localScale * scale;
 			Vector3 rot = text_mesh.transform.eulerAngles;
-			rot.z -= 90; //undynamic. Perhaps change to be dependent on move direction?
+			rot.z -= 90;
 			text_mesh.transform.eulerAngles = rot;
 		}
 
@@ -41,7 +36,6 @@ public class TextBolt : MonoBehaviour {
 		}
 
 		public void reduceVisibility(double alpha_fade_amount){
-			//mr.material.color.a = mr.material.color.a - alpha_fade_amount;
 			Color newcolor = mr.material.color;
 			newcolor.a = (float)(newcolor.a - alpha_fade_amount);
 			mr.material.color = newcolor;
@@ -56,20 +50,20 @@ public class TextBolt : MonoBehaviour {
 		}
 	}
 
-	public int SIZE = 1;
-	public int FONT_RES = 100;
-	public float SCALE = 0.1f;	
+	public int SIZE = 10;
+	//public int FONT_RES = 100;
+	//public float SCALE = 0.1f;	
 	public Color BASE_COLOR = new Color(71f/255f, 255f/255f, 103f/255f);
 	
 	public GameObject MANAGERS; // object containing Font and Material manager components
 	// if no font / material given, must be passed
 
-	public float MOVE_SPEED = 4f;
+	public float MOVE_SPEED = 20f;
 	public Vector3 MOVE_DIR = Vector3.down; //should have magnitude 1
 	
-	public double ALPHA_FADE = 0.01; // how much alpha decreases every frame
+	public double ALPHA_FADE = 0.005; // how much alpha decreases every frame
 	
-	public float CHAR_SPACING = 0.7f; // this ought to be dynamic at some point. later
+	public float CHAR_SPACING; // this ought to be dynamic at some point.
 	Vector3 original_pos;
 
 	public bool smooth_terminate = false; // set to true and the bolt will end / kill itself once the existing cells fade
@@ -87,6 +81,8 @@ public class TextBolt : MonoBehaviour {
 
 		TEXT_FONT 		= font;
 		TEXT_MATERIAL 	= mat;
+
+		CHAR_SPACING = (3f / 5f) * SIZE;
 
 		CHAR_CHOICES = charChoices;
 	}
@@ -117,7 +113,7 @@ public class TextBolt : MonoBehaviour {
 
 
 	void AddCell(){
-		cells.Add( new TextCell (transform.position, SIZE, FONT_RES, SCALE, BASE_COLOR, 
+		cells.Add( new TextCell (transform.position, SIZE, BASE_COLOR, 
 		                         TextUtil.GetRandomChar(CHAR_CHOICES), TEXT_FONT, TEXT_MATERIAL) );
 		cellcounter ++;
 	}
@@ -125,10 +121,7 @@ public class TextBolt : MonoBehaviour {
 
 	void FixedUpdate () {
 		if (!smooth_terminate) {
-			Vector3 deltaPos = transform.position - original_pos;
-			if (deltaPos.magnitude > (cellcounter) * CHAR_SPACING) {
-				AddCell ();
-			}
+			AddNeededCells();
 		}
 		Recolor ();
 		Move ();
@@ -136,6 +129,13 @@ public class TextBolt : MonoBehaviour {
 			if(cells.Count == 0){
 				Destroy(gameObject);
 			}
+		}
+	}
+
+	void AddNeededCells(){
+		Vector3 deltaPos = transform.position - original_pos;
+		if (deltaPos.magnitude > (cellcounter) * CHAR_SPACING) {
+			AddCell ();
 		}
 	}
 

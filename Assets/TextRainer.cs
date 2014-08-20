@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class TextRainer : MonoBehaviour {
 
-	public float period = 1f; //time between bolts
+	public float period = 0.5f; //time between bolts
 	public int max_bolts = 50;
 
 	public GameObject MANAGERS; // needs to be passed via editor or initialization
@@ -13,8 +13,8 @@ public class TextRainer : MonoBehaviour {
 	public Material TEXT_MATERIAL;
 	public Font 	TEXT_FONT;
 	
-	public float xSpread = 10;
-	public float zSpread = 5;
+	public float xSpread = 110;
+	public float zSpread = 40;
 	public float ySpread = 0;
 
 	float time_since_spawn = 0;
@@ -104,7 +104,7 @@ public class TextRainer : MonoBehaviour {
 		ArrayList toRemove = new ArrayList ();
 
 		foreach(GameObject bolt in bolts){
-			if(outsideCameraView(bolt)){
+			if(!willEnterView(bolt)){
 				bolt.GetComponent<TextBolt>().SmoothTerminate();
 				toRemove.Add (bolt);
 			}
@@ -115,7 +115,7 @@ public class TextRainer : MonoBehaviour {
 		}
 	}
 
-	bool outsideCameraView(GameObject obj){
+	static bool outsideCameraView(GameObject obj){
 		Vector2 viewportPoint = Camera.main.WorldToViewportPoint (obj.transform.position);
 		if (viewportPoint.x < 0 ||
 						viewportPoint.x > 1 ||
@@ -124,6 +124,17 @@ public class TextRainer : MonoBehaviour {
 			return true;
 		}
 		return false;
+	}
+
+	static bool willEnterView(GameObject obj_going_down ){
+		//or is in view
+		Vector2 viewportPoint = Camera.main.WorldToViewportPoint (obj_going_down.transform.position);
+		if (viewportPoint.x < 0 ||
+		    viewportPoint.x > 1 ||
+		    viewportPoint.y < 0) {
+			return false;
+		}
+		return true;
 	}
 
 	/*
