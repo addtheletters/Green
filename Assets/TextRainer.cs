@@ -137,15 +137,4 @@ public class TextRainer : MonoBehaviour {
 		return true;
 	}
 
-	/*
-	 * bool insideCameraView(){
-	 * // below method requires that obj have a renderer
-		//print ("obj is " + obj.renderer.isVisible + "ly visible at " + obj.transform.position);
-		//return obj.renderer.isVisible;
-	 * 
-	 * }
-	 * 
-	 * 
-	 */
-
 }

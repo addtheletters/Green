@@ -6,13 +6,6 @@ using System.Text;
 
 public static class TextUtil {
 
-	/*string intext = "Ï –þ!FŒ©ìAæ­Çá«’0·)•þùÍ%4Ã•‘¾‡unXK§û(x¤’Þmê°Y7#$O­j’zÜÎRkBÅ‡‡®¤œÝ4:°È2ä(…t:n‰e¦Þ+6‡" +
-					"§Ê#BYIÜ<k)´Ý“*z³Àÿ f-JÖŒ^!ñÏî–;K©ä,Ã¦«ÿ ±Í÷“®ø¿Sha–IÄ(¦EÜé]É¯J¿ÃSÑvgÓöž&‘ ¼’" +
-	      			"Õ»F¼ùSö±×Ç‹¼r|;áöy4¿Æ­{/™”ûL„Oû¹=÷W_O–·;Ù Œî¬Î;ào…áø‹åÈ-;J{•l¼" +
-					"{ò:ú)¢»1uÜ&•úNM³¬†Ûn2 4KsHNrExÚÍèMÈµ¢È žÔõÕu&Pvž0qšµ‡h9„»ñÿ 2#*gŽP}vðBð‰>S×ÑO­"+
-			"©¢2eºv$nÍ>	$$rk®PJ&‘‰¥ËGü+NÚÿ Í‡xôàWHu,ë´fó!òÞKv !ÆN?¥v¶‰il©mLrJó*^å­ˆîá…Þr_z…@Ž=¼‘ïI";
-	*/
-
 	public static string DEFAULT_FONT_NAME = "Pixelate";
 	public static string DEFAULT_MATERIAL_NAME = "Font Material";
 	public static string DEFAULT_CHARACTER_POOL = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM?!@#$%^&*()+/={}[]|:;<>";
