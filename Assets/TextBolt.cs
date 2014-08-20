@@ -62,7 +62,7 @@ public class TextBolt : MonoBehaviour {
 	public Color BASE_COLOR = new Color(71f/255f, 255f/255f, 103f/255f);
 	
 	public GameObject MANAGERS; // object containing Font and Material manager components
-	// must be passed in initialization or through editor
+	// if no font / material given, must be passed
 
 	public float MOVE_SPEED = 4f;
 	public Vector3 MOVE_DIR = Vector3.down; //should have magnitude 1
@@ -74,66 +74,51 @@ public class TextBolt : MonoBehaviour {
 
 	public bool smooth_terminate = false; // set to true and the bolt will end / kill itself once the existing cells fade
 
-	string CHAR_CHOICES;
-	public bool USE_SCRAMBLED_TEXT = false;
+	string CHAR_CHOICES; //should be passed
 
 	Material	TEXT_MATERIAL;
 	Font 		TEXT_FONT;
 
 	List<TextCell> cells = new List<TextCell>();
 	int cellcounter = 0;
-	
+
+	//use to pass font and material in a single line
+	public void TypicalInit(Font font, Material mat, string charChoices){
+
+		TEXT_FONT 		= font;
+		TEXT_MATERIAL 	= mat;
+
+		CHAR_CHOICES = charChoices;
+	}
+
 	void Start () {
-		if (MANAGERS == null) {
+		/*if (MANAGERS == null) {
 			Debug.LogWarning("[TextBolt] MANAGERS not given, things will break if no font or material is given.");
-		}
+		}*/
 
 		if (TEXT_FONT == null) {
 			Debug.LogWarning("[TextBolt] Font not given, attempting load from manager.");
-			LoadFont("Pixelate"); //default font
+			TEXT_FONT = TextUtil.GetFont (MANAGERS, TextUtil.DEFAULT_FONT_NAME); //default font
 		}
 
 		if (TEXT_MATERIAL == null) {
 			Debug.LogWarning("[TextBolt] Material not given, attempting load from manager.");
-			LoadMaterial("Font Material"); //default material
+			TEXT_MATERIAL = TextUtil.GetMaterial (MANAGERS, TextUtil.DEFAULT_MATERIAL_NAME); //default material
+		}
+
+		if ( CHAR_CHOICES == null ){
+			Debug.LogWarning("[TextBolt] No character choices given, defaulting.");
+			CHAR_CHOICES = TextUtil.DEFAULT_CHARACTER_POOL;
 		}
 
 		original_pos = transform.position;
 
-		if (USE_SCRAMBLED_TEXT) {
-			CHAR_CHOICES = "1";
-
-		} else {
-			CHAR_CHOICES = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM?!@#$%^&*()+-={}[]|:;<>";
-		}
 	}
 
-	void LoadFont(string fontname){
-		TEXT_FONT = GetFont (MANAGERS, fontname);
-	}
-	void LoadMaterial(string materialname){
-		TEXT_MATERIAL = GetMaterial (MANAGERS, materialname);
-	}
-
-	public static Font GetFont(GameObject managers, string NAME){
-		FontManager fm  = (FontManager)(managers.GetComponent<FontManager>());
-		return (fm).get.GetFont(NAME);
-	}
-
-	public static Material GetMaterial(GameObject managers, string NAME){
-		MaterialManager mm = (MaterialManager)(managers.GetComponent<MaterialManager>());
-		return (mm).get.GetMaterial(NAME);
-	}
-
-	
-	public static string GetRandomChar(string charChoices){
-		//a single random character
-		return ""+(charChoices[ Random.Range(0, charChoices.Length) ]);
-	}
 
 	void AddCell(){
 		cells.Add( new TextCell (transform.position, SIZE, FONT_RES, SCALE, BASE_COLOR, 
-		                         GetRandomChar(CHAR_CHOICES), TEXT_FONT, TEXT_MATERIAL) );
+		                         TextUtil.GetRandomChar(CHAR_CHOICES), TEXT_FONT, TEXT_MATERIAL) );
 		cellcounter ++;
 	}
 

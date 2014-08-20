@@ -8,6 +8,10 @@ public class TextRainer : MonoBehaviour {
 	public int max_bolts = 50;
 
 	public GameObject MANAGERS; // needs to be passed via editor or initialization
+
+	// can either be passed or will be loaded
+	public Material TEXT_MATERIAL;
+	public Font 	TEXT_FONT;
 	
 	public float xSpread = 10;
 	public float zSpread = 5;
@@ -17,7 +21,41 @@ public class TextRainer : MonoBehaviour {
 
 	List<GameObject> bolts = new List<GameObject>();
 	int bolt_counter  = 0;
-	
+
+	//public TextAsset TEXT_SOURCE;
+	string CHAR_CHOICES; //gets loaded from asset
+
+	// Use this for initialization
+	void Start () {
+		if (MANAGERS == null) {
+			Debug.LogWarning("[TextRaindeer] MANAGERS not given, things will break if font and material are missing!");
+		}
+
+		if (TEXT_FONT == null) {
+			Debug.LogWarning("[TextRainer] Font not given, attempting load from manager.");
+			TEXT_FONT = TextUtil.GetFont (MANAGERS, TextUtil.DEFAULT_FONT_NAME); //default font
+		}
+		
+		if (TEXT_MATERIAL == null) {
+			Debug.LogWarning("[TextRainer] Material not given, attempting load from manager.");
+			TEXT_MATERIAL = TextUtil.GetMaterial (MANAGERS, TextUtil.DEFAULT_MATERIAL_NAME); //default material
+		}
+
+		/*if (TEXT_SOURCE == null) {
+			Debug.LogWarning("[TextRainer] TEXT_SOURCE not given, bolts will default.");
+		}*/
+		CHAR_CHOICES = TextUtil.UTF_CHARACTER_POOL;
+
+		AddBolt (transform.position);
+	}
+
+	void LoadFont(string fontname){
+		TEXT_FONT = TextUtil.GetFont (MANAGERS, fontname);
+	}
+	void LoadMaterial(string materialname){
+		TEXT_MATERIAL = TextUtil.GetMaterial (MANAGERS, materialname);
+	}
+
 	void AddBolt(){
 		Vector3 spawnPos = transform.position;
 		spawnPos.x += xSpread * Random.value - xSpread/2;
@@ -25,26 +63,18 @@ public class TextRainer : MonoBehaviour {
 		spawnPos.z += zSpread * Random.value - zSpread/2;
 		AddBolt (spawnPos);
 	}
-
+	
 	void AddBolt(Vector3 startPos){
 		GameObject bolt = new GameObject ("Text Bolt");
 		bolt.transform.position = startPos;
 		bolts.Add (bolt);
-
+		
 		TextBolt tb = (TextBolt)(bolt.AddComponent<TextBolt>());
-		tb.MANAGERS = MANAGERS;
-
+		tb.TypicalInit (TEXT_FONT, TEXT_MATERIAL, CHAR_CHOICES);
+		
 		bolt_counter ++;
 	}
 
-
-	// Use this for initialization
-	void Start () {
-		if (MANAGERS == null) {
-			Debug.LogWarning("[TextRainer] MANAGERS not given, things will break!");
-		}
-		AddBolt (transform.position);
-	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
