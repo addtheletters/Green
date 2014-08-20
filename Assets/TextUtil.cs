@@ -6,8 +6,8 @@ using System.Text;
 
 public static class TextUtil {
 
-	public static float DEFAULT_PERIOD 		= 0.06f;
-	public static int   DEFAULT_MAX_BOLTS 	= 120;
+	public static float DEFAULT_PERIOD 		= 0.08f;
+	public static int   DEFAULT_MAX_BOLTS 	= 300;
 
 	public static float DEFAULT_X_SPREAD 	= 1000f;
 	public static float DEFAULT_Y_SPREAD 	= 0f;
@@ -27,6 +27,19 @@ public static class TextUtil {
 		+"†‡‰Šš¢£¤¥¦§©ª¶ºÂÃÅÆÇÈÉÊÒÓÔÕÖ×ÙÚáâãäåæçèéêñòóôõö÷øùú"
 		+"?<LÎ½O{>Í¼Ý¾Ž_ìžÐý+Ë«~|¬¿ßüKopŒ€0®ûþŸïëmœÞ[líÜ;k]ÌÏM»Pnî=N@"
 		+"QWERTYUIOPASDFGHJKLZXCVBNM1234567890@#$%&";
+
+	public static Vector2 GetTextSize( string text, GUIStyle styl ){
+		return styl.CalcSize ( new GUIContent("A") ) / 10;
+	}
+
+	public static GUIStyle CreateMeasuringStyle(Font f, int size){
+		GUIStyle styl 	= new GUIStyle();
+		styl.font 		= f;
+		styl.fontSize 	= size;
+		styl.name     	= "Measuring Style";
+		return styl;
+	}
+
 
 	public static Font GetFont(GameObject managers, string NAME){
 		FontManager fm  = (FontManager)(managers.GetComponent<FontManager>());

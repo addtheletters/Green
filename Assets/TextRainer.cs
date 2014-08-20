@@ -19,18 +19,18 @@ public class TextRainer : MonoBehaviour {
 	public GameObject MANAGERS; // needs to be passed via editor or initialization
 
 	// to be handed to bolts:
-	public int TEXT_SIZE = TextUtil.DEFAULT_FONT_SIZE;
+	public int   TEXT_SIZE  = TextUtil.DEFAULT_FONT_SIZE;
 	public float MOVE_SPEED = TextUtil.DEFAULT_MOVE_SPEED;
 
 	Material TEXT_MATERIAL;
-	Font 	TEXT_FONT;
+	Font 	 TEXT_FONT;
 
 	string CHAR_CHOICES; //gets loaded from asset or from static data in TextUtil
+
+	GUIStyle MEASURING_STYLE;
 	
 	// Use this for initialization
 	void Start () {
-
-		FiddlingGui ();
 
 		if (MANAGERS == null) {
 			Debug.LogWarning("[TextRaindeer] MANAGERS not given, things will break if font and material are missing!");
@@ -50,21 +50,9 @@ public class TextRainer : MonoBehaviour {
 			Debug.LogWarning("[TextRainer] TEXT_SOURCE not given, bolts will default.");
 		}*/
 		CHAR_CHOICES = TextUtil.UTF_CHARACTER_POOL;
-
-		AddBolt (transform.position);
+		MEASURING_STYLE = TextUtil.CreateMeasuringStyle (TEXT_FONT, TEXT_SIZE);
 	}
-
-	void FiddlingGui(){
-		GUIStyle styl = new GUIStyle();
-		styl.font = TEXT_FONT;
-		styl.fontSize = TEXT_SIZE;
-		styl.name = "Measuring Style";
-
-		Debug.Log (styl.CalcSize ( new GUIContent("A") ));
-	}
-
-
-
+	
 	void LoadFont(string fontname){
 		TEXT_FONT = TextUtil.GetFont (MANAGERS, fontname);
 	}
