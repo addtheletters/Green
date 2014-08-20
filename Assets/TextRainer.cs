@@ -51,14 +51,14 @@ public class TextRainer : MonoBehaviour {
 
 		time_since_spawn += Time.fixedDeltaTime;
 
-		print ("TSS" + time_since_spawn);
+		//print ("TSS" + time_since_spawn);
 
 		int spawns_needed 	= 0;
 		int bolts_this_tick = 0;
 
 		if (time_since_spawn > period) {
 			spawns_needed = (int)(time_since_spawn/period);
-			print (time_since_spawn + "/" + period + ":" + spawns_needed);
+			//print (time_since_spawn + "/" + period + ":" + spawns_needed);
 			time_since_spawn = 0;
 		}
 
