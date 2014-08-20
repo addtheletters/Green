@@ -9,8 +9,8 @@ public class TextBolt : MonoBehaviour {
 		public GameObject text_mesh;
 		public MeshRenderer mr;
 
-		public TextCell( Vector3 pos, int size, int font_res, float scale, Color color, GameObject managers, 
-		                string fontname = "Pixelate", string materialname = "Font Material"){
+		public TextCell( Vector3 pos, int size, int font_res, float scale, Color color,
+		                string text, Font font, Material mat){
 			text_mesh = new GameObject("Text Cell");
 			text_mesh.transform.position = pos;
 			TextMesh mesh_component = (TextMesh)(text_mesh.AddComponent<TextMesh>());
@@ -18,15 +18,13 @@ public class TextBolt : MonoBehaviour {
 			mesh_component.fontSize 	 = font_res;
 			mesh_component.characterSize = size;
 			mesh_component.color 		 = color;
-			mesh_component.text 		 = getText();
+			mesh_component.text 		 = text;
 
-			FontManager fm = (FontManager)(managers.GetComponent<FontManager>());
-			mesh_component.font 		 = (fm).get.GetFont(fontname);
+			mesh_component.font 		 = font;
 
 
 			mr = text_mesh.transform.GetComponent<MeshRenderer>();
-			MaterialManager mm = (MaterialManager)(managers.GetComponent<MaterialManager>());
-			mr.material = (mm).get.GetMaterial(materialname);
+			mr.material = mat;
 
 			/*if (mr.material == null){
 				print("NONONONOull");
@@ -36,12 +34,6 @@ public class TextBolt : MonoBehaviour {
 			Vector3 rot = text_mesh.transform.eulerAngles;
 			rot.z -= 90; //undynamic. Perhaps change to be dependent on move direction?
 			text_mesh.transform.eulerAngles = rot;
-		}
-
-		public string getText(string charChoices = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM?!@#$%^&*()+-={}[]|:;<>"){
-			//a single random character
-			return ""+(charChoices[ Random.Range(0, charChoices.Length) ]);
-			//return "UNIMPLEMENTED";
 		}
 
 		public void removeMeshObject(){
@@ -82,20 +74,69 @@ public class TextBolt : MonoBehaviour {
 
 	public bool smooth_terminate = false; // set to true and the bolt will end / kill itself once the existing cells fade
 
+	string CHAR_CHOICES;
+	public bool USE_SCRAMBLED_TEXT = false;
+
+	Material	TEXT_MATERIAL;
+	Font 		TEXT_FONT;
+
 	List<TextCell> cells = new List<TextCell>();
 	int cellcounter = 0;
 	
 	void Start () {
 		if (MANAGERS == null) {
-			Debug.LogWarning("[TextBolt] MANAGERS not given, things will break!");
+			Debug.LogWarning("[TextBolt] MANAGERS not given, things will break if no font or material is given.");
 		}
+
+		if (TEXT_FONT == null) {
+			Debug.LogWarning("[TextBolt] Font not given, attempting load from manager.");
+			LoadFont("Pixelate"); //default font
+		}
+
+		if (TEXT_MATERIAL == null) {
+			Debug.LogWarning("[TextBolt] Material not given, attempting load from manager.");
+			LoadMaterial("Font Material"); //default material
+		}
+
 		original_pos = transform.position;
+
+		if (USE_SCRAMBLED_TEXT) {
+			CHAR_CHOICES = "1";
+
+		} else {
+			CHAR_CHOICES = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM?!@#$%^&*()+-={}[]|:;<>";
+		}
+	}
+
+	void LoadFont(string fontname){
+		TEXT_FONT = GetFont (MANAGERS, fontname);
+	}
+	void LoadMaterial(string materialname){
+		TEXT_MATERIAL = GetMaterial (MANAGERS, materialname);
+	}
+
+	public static Font GetFont(GameObject managers, string NAME){
+		FontManager fm  = (FontManager)(managers.GetComponent<FontManager>());
+		return (fm).get.GetFont(NAME);
+	}
+
+	public static Material GetMaterial(GameObject managers, string NAME){
+		MaterialManager mm = (MaterialManager)(managers.GetComponent<MaterialManager>());
+		return (mm).get.GetMaterial(NAME);
+	}
+
+	
+	public static string GetRandomChar(string charChoices){
+		//a single random character
+		return ""+(charChoices[ Random.Range(0, charChoices.Length) ]);
 	}
 
 	void AddCell(){
-		cells.Add( new TextCell (transform.position, SIZE, FONT_RES, SCALE, BASE_COLOR, MANAGERS) );
+		cells.Add( new TextCell (transform.position, SIZE, FONT_RES, SCALE, BASE_COLOR, 
+		                         GetRandomChar(CHAR_CHOICES), TEXT_FONT, TEXT_MATERIAL) );
 		cellcounter ++;
 	}
+
 
 	void FixedUpdate () {
 		if (!smooth_terminate) {
