@@ -2,17 +2,16 @@
 using System.Collections;
 
 public class TextBolt : MonoBehaviour {
-
-
+	
 	class TextCell {
 
 		public GameObject text_mesh;
 		public MeshRenderer mr;
 
-		public TextCell( int size, int font_res, float scale, Color color, GameObject managers, 
+		public TextCell( Vector3 pos, int size, int font_res, float scale, Color color, GameObject managers, 
 		                string fontname = "Pixelate", string materialname = "Font Material"){
-			text_mesh = new GameObject();
-
+			text_mesh = new GameObject("text cell");
+			text_mesh.transform.position = pos;
 			TextMesh mesh_component = (TextMesh)(text_mesh.AddComponent("TextMesh"));
 
 			mesh_component.fontSize 	 = font_res;
@@ -33,11 +32,15 @@ public class TextBolt : MonoBehaviour {
 			}*/
 
 			text_mesh.transform.localScale = text_mesh.transform.localScale * scale;
+			Vector3 rot = text_mesh.transform.eulerAngles;
+			rot.z -= 90;
+			text_mesh.transform.eulerAngles = rot;
 		}
 
-		public string getText(){
+		public string getText(string charChoices = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM?!@#$%^&*()_+-={}[]|:;<>"){
 			//a single random character
-			return "UNIMPLEMENTED";
+			return ""+(charChoices[ Random.Range(0, charChoices.Length) ]);
+			//return "UNIMPLEMENTED";
 		}
 
 		public void removeMeshObject(){
@@ -65,12 +68,15 @@ public class TextBolt : MonoBehaviour {
 	public int SIZE = 5;
 	public int FONT_RES = 10;
 	public Font FONT;
-	public float MOVE_SPEED = 0.01f;
+	public float MOVE_SPEED = 1f;
 	public float SCALE = 0.1f;
 	public Vector3 MOVE_DIR = Vector3.down; //should have magnitude 1
 	
 	public double ALPHA_FADE = 0.001; // how much alpha decreases every frame
 	public Color BASE_COLOR = new Color(1, 1, 1);
+
+	float CHAR_SPACING = 1f;
+	Vector3 original_pos;
 
 	ArrayList cells = new ArrayList();
 	public GameObject MANAGERS;
@@ -79,15 +85,24 @@ public class TextBolt : MonoBehaviour {
 	//initialization
 	void Start () {
 		//FONT = fm.get.GetFont("Pixelate");
-		AddCell ();
+		original_pos = transform.position;
+		//AddCell ();
 	}
 
 	void AddCell(){
-		cells.Add( new TextCell (SIZE, FONT_RES, SCALE, BASE_COLOR, MANAGERS) );
+		cells.Add( new TextCell (transform.position, SIZE, FONT_RES, SCALE, BASE_COLOR, MANAGERS) );
 	}
 
 	//called once per frame
 	void Update () {
+		Vector3 deltaPos = transform.position - original_pos;
+		if (deltaPos.magnitude > cells.Count * CHAR_SPACING){
+
+			print ("mag:"+deltaPos.magnitude);
+			print ("space:"+cells.Count * CHAR_SPACING);
+
+			AddCell();
+		}
 		Recolor ();
 		Move ();
 	}
@@ -106,8 +121,8 @@ public class TextBolt : MonoBehaviour {
 	}
 
 	void Move(){
-		// Hah! I used deltaTime like a serious programmer dude!
-		transform.Translate(MOVE_DIR * MOVE_SPEED * Time.deltaTime);
+		// Hah! I used fixedDeltaTime like a serious programmer dude!
+		transform.Translate(MOVE_DIR * MOVE_SPEED * Time.fixedDeltaTime);
 	}
 
 }
