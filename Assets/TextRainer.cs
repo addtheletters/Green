@@ -23,7 +23,7 @@ public class TextRainer : MonoBehaviour {
 	int bolt_counter  = 0;
 
 	//public TextAsset TEXT_SOURCE;
-	string CHAR_CHOICES; //gets loaded from asset
+	string CHAR_CHOICES; //gets loaded from asset or from static data in TextUtil
 
 	// Use this for initialization
 	void Start () {
@@ -57,13 +57,22 @@ public class TextRainer : MonoBehaviour {
 	}
 
 	void AddBolt(){
-		Vector3 spawnPos = transform.position;
-		spawnPos.x += xSpread * Random.value - xSpread/2;
-		spawnPos.y += ySpread * Random.value - ySpread/2;
-		spawnPos.z += zSpread * Random.value - zSpread/2;
+		Vector3 spawnPos = GetSpawnPos();
 		AddBolt (spawnPos);
 	}
-	
+
+	Vector3 GetSpawnPos(){
+		Vector3 ret = transform.position;
+		ret.x += GetSpreadVal (xSpread);
+		ret.y += GetSpreadVal (ySpread);
+		ret.z += GetSpreadVal (zSpread);
+		return ret;
+	}
+
+	float GetSpreadVal( float max_spread ){
+		return max_spread * Random.value - max_spread / 2;
+	}
+
 	void AddBolt(Vector3 startPos){
 		GameObject bolt = new GameObject ("Text Bolt");
 		bolt.transform.position = startPos;

@@ -29,6 +29,7 @@ public class TextBolt : MonoBehaviour {
 			Vector3 rot = text_mesh.transform.eulerAngles;
 			rot.z -= 90;
 			text_mesh.transform.eulerAngles = rot;
+
 		}
 
 		public void removeMeshObject(){
@@ -75,6 +76,7 @@ public class TextBolt : MonoBehaviour {
 
 	List<TextCell> cells = new List<TextCell>();
 	int cellcounter = 0;
+	//SOON //float total_boltlen = 0;
 
 	//use to pass font and material in a single line
 	public void TypicalInit(Font font, Material mat, string charChoices){
@@ -134,9 +136,14 @@ public class TextBolt : MonoBehaviour {
 
 	void AddNeededCells(){
 		Vector3 deltaPos = transform.position - original_pos;
-		if (deltaPos.magnitude > (cellcounter) * CHAR_SPACING) {
+		if (deltaPos.magnitude > GetBoltLength()) {
 			AddCell ();
+			//SOON //boltlen += something related to something returned from AddCell related to size of char
 		}
+	}
+
+	float GetBoltLength(){
+		return (cellcounter) * CHAR_SPACING;
 	}
 
 	void Recolor(){
