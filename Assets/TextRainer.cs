@@ -4,29 +4,34 @@ using System.Collections.Generic;
 
 public class TextRainer : MonoBehaviour {
 
-	public float period = 0.5f; //time between bolts
-	public int max_bolts = 50;
+	public float period  = TextUtil.DEFAULT_PERIOD; //time between bolts
+	public int max_bolts = TextUtil.DEFAULT_MAX_BOLTS;
 
-	public GameObject MANAGERS; // needs to be passed via editor or initialization
-
-	// can either be passed or will be loaded
-	public Material TEXT_MATERIAL;
-	public Font 	TEXT_FONT;
+	public float xSpread = TextUtil.DEFAULT_X_SPREAD;
+	public float ySpread = TextUtil.DEFAULT_Y_SPREAD;
+	public float zSpread = TextUtil.DEFAULT_Z_SPREAD;
 	
-	public float xSpread = 110;
-	public float zSpread = 40;
-	public float ySpread = 0;
-
 	float time_since_spawn = 0;
-
+	
 	List<GameObject> bolts = new List<GameObject>();
 	int bolt_counter  = 0;
+	
+	public GameObject MANAGERS; // needs to be passed via editor or initialization
 
-	//public TextAsset TEXT_SOURCE;
+	// to be handed to bolts:
+	public int TEXT_SIZE = TextUtil.DEFAULT_FONT_SIZE;
+	public float MOVE_SPEED = TextUtil.DEFAULT_MOVE_SPEED;
+
+	Material TEXT_MATERIAL;
+	Font 	TEXT_FONT;
+
 	string CHAR_CHOICES; //gets loaded from asset or from static data in TextUtil
-
+	
 	// Use this for initialization
 	void Start () {
+
+		FiddlingGui ();
+
 		if (MANAGERS == null) {
 			Debug.LogWarning("[TextRaindeer] MANAGERS not given, things will break if font and material are missing!");
 		}
@@ -48,6 +53,17 @@ public class TextRainer : MonoBehaviour {
 
 		AddBolt (transform.position);
 	}
+
+	void FiddlingGui(){
+		GUIStyle styl = new GUIStyle();
+		styl.font = TEXT_FONT;
+		styl.fontSize = TEXT_SIZE;
+		styl.name = "Measuring Style";
+
+		Debug.Log (styl.CalcSize ( new GUIContent("A") ));
+	}
+
+
 
 	void LoadFont(string fontname){
 		TEXT_FONT = TextUtil.GetFont (MANAGERS, fontname);
@@ -79,7 +95,7 @@ public class TextRainer : MonoBehaviour {
 		bolts.Add (bolt);
 		
 		TextBolt tb = (TextBolt)(bolt.AddComponent<TextBolt>());
-		tb.TypicalInit (TEXT_FONT, TEXT_MATERIAL, CHAR_CHOICES);
+		tb.TypicalInit (TEXT_SIZE, TEXT_FONT, TEXT_MATERIAL, CHAR_CHOICES, MOVE_SPEED);
 		
 		bolt_counter ++;
 	}

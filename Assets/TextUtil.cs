@@ -6,8 +6,20 @@ using System.Text;
 
 public static class TextUtil {
 
-	public static string DEFAULT_FONT_NAME = "Pixelate";
-	public static string DEFAULT_MATERIAL_NAME = "Font Material";
+	public static float DEFAULT_PERIOD 		= 0.06f;
+	public static int   DEFAULT_MAX_BOLTS 	= 120;
+
+	public static float DEFAULT_X_SPREAD 	= 1000f;
+	public static float DEFAULT_Y_SPREAD 	= 0f;
+	public static float DEFAULT_Z_SPREAD 	= 40f;
+
+	public static int DEFAULT_FONT_SIZE 	= 10;
+	public static float DEFAULT_MOVE_SPEED 	= 40f;
+	public static Color DEFAULT_COLOR 		= new Color(71f/255f, 255f/255f, 103f/255f);
+	public static double DEFAULT_ALPHA_FADE = 0.005f;
+
+	public static string DEFAULT_FONT_NAME 	= "Pixelate";
+	public static string DEFAULT_MATERIAL_NAME  = "Font Material";
 	public static string DEFAULT_CHARACTER_POOL = "1234567890QWERTYUIOPASDFGHJKLZXCVBNM?!@#$%^&*()+/={}[]|:;<>";
 
 	public static string UTF_CHARACTER_POOL = "ÿØàJFIHÛC!$À"
