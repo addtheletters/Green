@@ -8,7 +8,7 @@ public class TextRainer : MonoBehaviour {
 	public int max_bolts = TextUtil.DEFAULT_MAX_BOLTS;
 
 	public float xSpread = TextUtil.DEFAULT_X_SPREAD;
-	public float ySpread = TextUtil.DEFAULT_Y_SPREAD;
+	//public float ySpread = TextUtil.DEFAULT_Y_SPREAD;
 	public float zSpread = TextUtil.DEFAULT_Z_SPREAD;
 	
 	float time_since_spawn = 0;
@@ -26,9 +26,9 @@ public class TextRainer : MonoBehaviour {
 	Font 	 TEXT_FONT;
 
 	string CHAR_CHOICES; //gets loaded from asset or from static data in TextUtil
-
 	GUIStyle MEASURING_STYLE;
-	
+	BlueNoiser bn;
+
 	// Use this for initialization
 	void Start () {
 
@@ -45,12 +45,12 @@ public class TextRainer : MonoBehaviour {
 			Debug.LogWarning("[TextRainer] Material not given, attempting load from manager.");
 			TEXT_MATERIAL = TextUtil.GetMaterial (MANAGERS, TextUtil.DEFAULT_MATERIAL_NAME); //default material
 		}
-
-		/*if (TEXT_SOURCE == null) {
-			Debug.LogWarning("[TextRainer] TEXT_SOURCE not given, bolts will default.");
-		}*/
 		CHAR_CHOICES = TextUtil.UTF_CHARACTER_POOL;
 		MEASURING_STYLE = TextUtil.CreateMeasuringStyle (TEXT_FONT, TEXT_SIZE);
+		Vector2 ts = TextUtil.GetTextSize ("I", MEASURING_STYLE);
+		Debug.Log (ts);
+		bn = new BlueNoiser( ts.y, 10,  new Vector2( transform.position.x - xSpread/2, transform.position.z - zSpread / 2 ),
+		                    			new Vector2( transform.position.x + xSpread/2, transform.position.z + zSpread / 2 ));
 	}
 	
 	void LoadFont(string fontname){
@@ -61,14 +61,24 @@ public class TextRainer : MonoBehaviour {
 	}
 
 	void AddBolt(){
-		Vector3 spawnPos = GetSpawnPos();
+		Vector3 spawnPos = GetSpawnPos_BN();
 		AddBolt (spawnPos);
 	}
 
-	Vector3 GetSpawnPos(){
+	//blue noise
+	Vector3 GetSpawnPos_WN(){
+		Vector3 ret = transform.position;
+		Vector2 x_zed = bn.GetNoisePoint ();
+		ret.x = x_zed.x;
+		ret.z = x_zed.y;
+		return ret;
+	}
+
+	//white noise
+	Vector3 GetSpawnPos_WN(){
 		Vector3 ret = transform.position;
 		ret.x += GetSpreadVal (xSpread);
-		ret.y += GetSpreadVal (ySpread);
+		//ret.y += GetSpreadVal (ySpread);
 		ret.z += GetSpreadVal (zSpread);
 		return ret;
 	}
