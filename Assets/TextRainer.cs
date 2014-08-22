@@ -49,7 +49,7 @@ public class TextRainer : MonoBehaviour {
 		MEASURING_STYLE = TextUtil.CreateMeasuringStyle (TEXT_FONT, TEXT_SIZE);
 		Vector2 ts = TextUtil.GetTextSize ("I", MEASURING_STYLE);
 		Debug.Log (ts);
-		bn = new BlueNoiser( ts.y, 10,  new Vector2( transform.position.x - xSpread/2, transform.position.z - zSpread / 2 ),
+		bn = new BlueNoiser( ts.y * 10, 2,  new Vector2( transform.position.x - xSpread/2, transform.position.z - zSpread / 2 ),
 		                    			new Vector2( transform.position.x + xSpread/2, transform.position.z + zSpread / 2 ));
 	}
 	
@@ -66,7 +66,7 @@ public class TextRainer : MonoBehaviour {
 	}
 
 	//blue noise
-	Vector3 GetSpawnPos_WN(){
+	Vector3 GetSpawnPos_BN(){
 		Vector3 ret = transform.position;
 		Vector2 x_zed = bn.GetNoisePoint ();
 		ret.x = x_zed.x;

@@ -54,6 +54,7 @@ public class BlueNoiser {
 				Vector2 trialPt = GetRandomExt( np );
 				if ( IsNoisePointValid( trialPt ) ){
 					to_add.Add ( trialPt );
+					Debug.Log("Tried" + trialPt + " and succeeded");
 				}
 				else{
 					Debug.Log("Tried" + trialPt + " and failed");
@@ -67,15 +68,19 @@ public class BlueNoiser {
 		np_array = new Vector2[ noise_points.Count ];
 		noise_points.Keys.CopyTo(np_array, 0);
 
+		Debug.Log ("Noise points generated with count " + np_array.Length);
+
 	}
 
 	public bool IsNoisePointValid( Vector2 pt ){
 		if (!IsPointInMinMax (pt)) {
+			Debug.Log ("pt " + pt + "failed minmax bounds test");
 			return false;
 		}
 		foreach ( Vector2 np in noise_points.Keys ){
 			Vector2 delta = pt - np;
 			if ( delta.sqrMagnitude < rad * rad ){
+				Debug.Log("pt " + pt + "failed radial test");
 				return false;
 			}
 		}

@@ -6,8 +6,8 @@ using System.Text;
 
 public static class TextUtil {
 
-	public static float DEFAULT_PERIOD 		= 0.08f;
-	public static int   DEFAULT_MAX_BOLTS 	= 200;
+	public static float DEFAULT_PERIOD 		= 0.1f;
+	public static int   DEFAULT_MAX_BOLTS 	= 100;
 
 	public static float DEFAULT_X_SPREAD 	= 1000f;
 	public static float DEFAULT_Y_SPREAD 	= 0f;
