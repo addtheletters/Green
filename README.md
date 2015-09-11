@@ -1,7 +1,7 @@
 Green
 =====
 
-Text goes up and down and down.
+Text goes up and down and down. Creates a visual effect like the code lines in The Matrix.
 
 This is a graphical test and experiment with Unity TextMeshes.
 
